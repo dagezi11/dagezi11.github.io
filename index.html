@@ -70,14 +70,24 @@
     // Icon Component using Lucide
     const Icon = ({ name, size = 24, className = "" }) => {
       const ref = useRef(null);
+      
+      // Convert kebab-case to PascalCase (e.g., "message-square" -> "MessageSquare")
+      const toPascalCase = (str) => {
+        return str.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join('');
+      };
+      
       useEffect(() => {
         if (ref.current) {
           ref.current.innerHTML = '';
-          const icon = lucide.createElement(lucide.icons[name]);
-          icon.setAttribute('width', size);
-          icon.setAttribute('height', size);
-          if (className) icon.setAttribute('class', className);
-          ref.current.appendChild(icon);
+          const iconName = toPascalCase(name);
+          const iconDef = lucide.icons[iconName];
+          if (iconDef) {
+            const icon = lucide.createElement(iconDef);
+            icon.setAttribute('width', size);
+            icon.setAttribute('height', size);
+            if (className) icon.setAttribute('class', className);
+            ref.current.appendChild(icon);
+          }
         }
       }, [name, size, className]);
       return <span ref={ref} className="inline-flex items-center justify-center"></span>;
